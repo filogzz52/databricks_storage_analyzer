@@ -16,7 +16,8 @@ dbutils.widgets.text("num_requests", "10")
 config_path = dbutils.widgets.get("config_path")
 catalog_schema = dbutils.widgets.get("catalog_schema")
 num_requests = int(dbutils.widgets.get("num_requests"))
-output_table = "f{catalog_schema}.tables_size"
+output_table = f"{catalog_schema}.tables_size"
+print("Output table:", output_table)
 
 # COMMAND ----------
 
@@ -140,7 +141,7 @@ df_describe.display()
 
 def table_exists(table):
     table = table.split(".")
-    query = f"""SHOW TABLES IN {table[0]}.{table[1]} LIKE '{table[0]}'"""
+    query = f"SHOW TABLES IN {table[0]}.{table[1]} LIKE '{table[0]}'"
     return spark.sql(query).count() > 0
     
 

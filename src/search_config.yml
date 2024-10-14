@@ -3,6 +3,6 @@ search:
   - "main.default.*"
 exclusions:
   - system.*.* 
-  - samples.*.*
-  - hive_metastore.*.*
-  - "*.information_schema.*"
+  # - samples.*.*
+  # - hive_metastore.*.*
+  # - "*.information_schema.*"
