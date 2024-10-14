@@ -35,65 +35,48 @@ pprint(config)
 
 # COMMAND ----------
 
-def ret_table_set(table):
-        set_table = set()
-        set_table.add(table)
-        return set_table
+def sql_filter(row):    
+    return tuple(['' if col == '*' else col for col in row])
+
+def search_tables(search_filter):
+    search_query = f"""select table_catalog, table_schema, table_name 
+            from system.information_schema.tables 
+            where table_catalog ilike '%{search_filter[0]}%' 
+            and table_schema ilike '%{search_filter[1]}%' 
+            and table_name ilike '%{search_filter[2]}%'
+            and table_type = 'MANAGED'"""
+
+    print(search_query)            
+    df = spark.sql(search_query)
     
-def unfold_catalogs(table):
-    if table[0] == '*':
-        return {(catalog["catalog"], table[1], table[2]) for catalog in spark.sql("show catalogs").collect()}
-    else:        
-        return ret_table_set(table)
-
-def unfold_schemas(table):
+    if df.count() == 0:
+        return set()
+    # TODO
+    # This can all be done in DF and only brought to memory in the end
+    ret = set([(row[0], row[1], row[2]) for row in df.collect()])
     
-    if table[1] == '*':
-        try:
-            print(f"show schemas in {table[0]}")
-            return {(table[0], schema["databaseName"], table[2]) for schema in spark.sql(f"show schemas in {table[0]}").collect()}
-        except:
-            return ret_table_set(table)
-    else:
-        return ret_table_set(table)
-
-
-def unfold_tables(table):
-    if table[2] == '*':
-        try:
-            print(f"show tables in {table[0]}.{table[1]}")
-            return {(table[0], table[1], table_name["tableName"]) for table_name in spark.sql(f"show tables in {table[0]}.{table[1]}").collect()}
-        except:
-            return ret_table_set(table)
-    else:
-        return ret_table_set(table)
-
-def unfold(tables):
-    unfolded_catalogs = set()
-    unfolded_schemas = set()
-    unfolded_tables = set()
-
-    for table in tables:        
-        unfolded_catalogs = unfolded_catalogs.union(unfold_catalogs(table))    
-    # print("unfolded_catalogs", unfolded_catalogs)
-    
-    for table in unfolded_catalogs:
-        unfolded_schemas = unfolded_schemas.union(unfold_schemas(table))
-    # print("unfolded_schemas", unfolded_schemas)
-
-    for table in unfolded_schemas:
-        unfolded_tables = unfolded_tables.union(unfold_tables(table))        
-    # print("unfolded_tables", unfolded_tables)        
-
-    return unfolded_tables
+    return ret
 
 
 def collect_tables(search, exclusions):
     search = [tuple(table.split(".")) for table in search]
     exclusions = [tuple(table.split(".")) for table in exclusions]
     
-    unfolded_search = unfold(search)   
-    unfolded_exclusions = unfold(exclusions)
+    search_filters = {sql_filter(row) for row in search}
+    
+    unfolded_search = set()
+    for search_filter in search_filters:
+        unfolded_search = unfolded_search.union(search_tables(search_filter))
+    
+    # print("Tables_unfolded", unfolded_search)
+
+    exclusion_filters = {sql_filter(row) for row in exclusions}
+    unfolded_exclusions = set()
+    for exclusion_filter in exclusion_filters:
+        unfolded_exclusions = unfolded_exclusions.union(search_tables(exclusion_filter))
+    
+    # print("Exclusions", unfolded_exclusions)
+    
     tables = unfolded_search.difference(unfolded_exclusions)
     print("Tables_final", tables)
     return tables
@@ -113,7 +96,7 @@ def get_table_size(table):
         df = spark.sql(f"describe detail {table}")    
         return df.collect()[0], df.schema
     except:
-        print("Error procesing this can be a view:", table) 
+        print("Error procesing this can be a view or user does not have permission:", table) 
         return "Error", None
 
     
