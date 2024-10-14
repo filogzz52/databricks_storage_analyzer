@@ -1,0 +1,25 @@
+# The main job for storage_analyzer.
+resources:
+  jobs:
+    storage_analyzer_job:
+      name: storage_analyzer_job
+      tasks:
+        - task_key: table_size_collector
+          notebook_task:
+            notebook_path: ../src/TableSizeCollector.py      
+        - task_key: create_view
+          notebook_task:
+            notebook_path: ../src/CreateView.sql      
+          depends_on: 
+            - task_key: table_size_collector
+        - task_key: create_dashboard
+          notebook_task:
+            notebook_path: ../src/CreateDashboard.py
+          depends_on: 
+            - task_key: create_view
+      parameters:
+        - name: config_path
+          default: ../src/search_config.yml            
+        - name: catalog_schema
+          default: "main.default"
+        
