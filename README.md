@@ -1,8 +1,7 @@
-# databricks_storage_analyzer
-Databricks Storage Analyzer
 
-# storage_analyzer
-The 'storage_analyzer' is a tool to allow the visualization of the Databricks tables size, it includes a workflow that will scan the tables and a Dashboard to display storage size
+# Databricks Storage Analyzer
+
+The 'storage_analyzer' is a tool that allows the visualization of the Databricks tables size, it includes a workflow that will scan the tables and a Dashboard to display storage size
 Additionally it also contains a Dashboard to visualize UC objects inside catalogs
 
 <img src="imgs/Screen1.png" width="50%" height="50%">
@@ -21,7 +20,7 @@ you can also configure exclusions there are tables, schemas or catalogs you do n
 ## How to change the destionation schema where the tables will be created 
 Go to resources/storage_analyzer.job.yml and change the parameter below:
 
-<img src="imgs/DestSchema.png" width="20%" height="20%">
+<img src="imgs/DestinationSchema.png" width="20%" height="20%">
 
 ## Steps to install and scan workspace
 
