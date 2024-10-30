@@ -9,6 +9,7 @@ Additionally it also contains a Dashboard to visualize UC objects inside catalog
 <img src="imgs/Screen3.png" width="50%" height="50%">
 <img src="imgs/Screen4.png" width="50%" height="50%">
 
+* The images have been anonymized
 
 
 ## How to configure scanning 
