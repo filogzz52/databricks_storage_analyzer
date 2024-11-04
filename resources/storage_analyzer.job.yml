@@ -22,4 +22,6 @@ resources:
           default: ../src/search_config.yml            
         - name: catalog_schema
           default: "main.default"
+        - name: num_requests
+          default: "30"
         
