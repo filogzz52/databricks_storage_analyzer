@@ -4,7 +4,7 @@
 The 'storage_analyzer' is a tool that allows the visualization of the Databricks tables size, it includes a workflow that will scan the tables and a Dashboard to display storage size
 Additionally it also contains a Dashboard to visualize UC objects inside catalogs
 
-<img src="imgs/StorageAnalyzer.gif" width="50%" height="50%">
+<img src="imgs/StorageAnalyzer.gif" width="70%" height="70%">
 <img src="imgs/Screen1.png" width="50%" height="50%">
 <img src="imgs/Screen2.png" width="50%" height="50%">
 <img src="imgs/Screen3.png" width="50%" height="50%">
