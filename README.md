@@ -19,7 +19,7 @@ Go to src/search_config.yaml and configure the search scope the syntax is simila
 you can also configure exclusions there are tables, schemas or catalogs you do not want to scan eg: 
 <img src="imgs/Config.png" width="20%" height="20%">
 
-## How to change the destionation schema where the tables will be created 
+## How to change the destination schema where the tables will be created 
 Go to resources/storage_analyzer.job.yml and change the parameter below:
 
 <img src="imgs/DestinationSchema.png" width="20%" height="20%">
